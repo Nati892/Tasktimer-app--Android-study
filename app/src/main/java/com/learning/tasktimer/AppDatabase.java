@@ -25,6 +25,7 @@ class AppDatabase extends SQLiteOpenHelper
      *
      * @param context the context providers context
      * @return a SQlite database helper object
+     * the only one that should use this class is {@link  AppProvider}
      */
     static AppDatabase getInstance(Context context)
     {
@@ -43,9 +44,9 @@ class AppDatabase extends SQLiteOpenHelper
         String sSQL;
 //        sSQL = "CREATE TABLE Tasks (_id INTEGER PRIMARY KEY NOT NULL, Name TEXT NOT NULL, Description TEXT, SortOrder INTEGER);";
         sSQL = "CREATE TABLE " + TaskContract.TABLE_NAME + "(" +
-                TaskContract.Columns._ID + " _id INTEGER PRIMARY KEY NOT NULL, " +
-                TaskContract.Columns.TASKS_NAME + " TEXT NOT NULL " +
-                TaskContract.Columns.TASKS_DESCRIPTION + " TEXT " +
+                TaskContract.Columns._ID + "  INTEGER PRIMARY KEY NOT NULL , " +
+                TaskContract.Columns.TASKS_NAME + " TEXT NOT NULL , " +
+                TaskContract.Columns.TASKS_DESCRIPTION + " TEXT ," +
                 TaskContract.Columns.TASKS_SORT_ORDER + " INTEGER);";
         Log.d(TAG, "sSQL->" + sSQL);
         db.execSQL(sSQL);
@@ -54,8 +55,18 @@ class AppDatabase extends SQLiteOpenHelper
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1)
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion)
     {
+        Log.d(TAG, "onUpgrade: starts");
+        switch (oldVersion)
+        {
+            case 1:
+                break;
+            default:
+                throw new IllegalStateException("onUpgrade() with unknown  newVersion: " + newVersion);
 
+
+        }
+        Log.d(TAG, "onUpgrade: ends");
     }
 }
