@@ -1,8 +1,10 @@
 package com.learning.tasktimer;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -22,6 +24,7 @@ import com.learning.tasktimer.databinding.ActivityMainBinding;
 import android.view.Menu;
 import android.view.MenuItem;
 
+
 public class MainActivity extends AppCompatActivity
 {
     private static final String TAG = "MainActivity";
@@ -37,12 +40,45 @@ public class MainActivity extends AppCompatActivity
         setContentView(binding.getRoot());
         setSupportActionBar(binding.toolbar);
 
+        ContentResolver contentResolver = getContentResolver();
+
+//        ContentValues values=new ContentValues();
+//                values.put(TaskContract.Columns.TASKS_NAME,"CONTENTsfs PROVIDER");
+//        values.put(TaskContract.Columns.TASKS_DESCRIPTION,"USaa");
+//        int count =contentResolver.update(TaskContract.buildTaskUri(6),values,null,null);
+
 //        AppDatabase appDatabase = AppDatabase.getInstance(this);
 //        final SQLiteDatabase db = appDatabase.getReadableDatabase();
-        String[] projection = {TaskContract.Columns.TASKS_NAME, TaskContract.Columns.TASKS_DESCRIPTION};
-        ContentResolver contentResolver = getContentResolver();
-//        Cursor cursor = contentResolver.query(TaskContract.CONTETNT_URI,
-        Cursor cursor = contentResolver.query(TaskContract.buildTaskUri(2),
+
+
+//        Log.d(TAG, "onCreate: ******->"+TaskContract.buildTaskUri(6)+"<-********");
+//       int count =contentResolver.delete(TaskContract.buildTaskUri(2),null,null);
+//        Log.d(TAG, "onCreate: deleted "+ count +" rows");
+
+
+        for (int j = 0; j < 20; j++)
+        {
+            ContentValues values = new ContentValues();
+            values.put(TaskContract.Columns.TASKS_NAME, "record " + j);
+            values.put(TaskContract.Columns.TASKS_DESCRIPTION, "Last " + j + " was brutally murdered");
+//        values.put(TaskContract.Columns.TASKS_SORT_ORDER, 2);
+            contentResolver.insert(TaskContract.CONTETNT_URI, values);
+        }
+//        ContentValues values = new ContentValues();
+//        values.put(TaskContract.Columns.TASKS_NAME, "SECOND record");
+//        values.put(TaskContract.Columns.TASKS_DESCRIPTION, "Last was brutally murdered");
+//        values.put(TaskContract.Columns.TASKS_SORT_ORDER, 2);
+//        contentResolver.insert(TaskContract.CONTETNT_URI,values);
+
+
+        String[] projection = {
+                TaskContract.Columns._ID,
+                TaskContract.Columns.TASKS_NAME,
+                TaskContract.Columns.TASKS_DESCRIPTION,
+                TaskContract.Columns.TASKS_SORT_ORDER};
+
+        Cursor cursor = contentResolver.query(TaskContract.CONTETNT_URI,
+                //      Cursor cursor = contentResolver.query(TaskContract.buildTaskUri(2),
                 projection,
                 null,
                 null
@@ -56,7 +92,7 @@ public class MainActivity extends AppCompatActivity
         {
             for (int i = 0; i < cursor.getColumnCount(); i++)
             {
-                Log.d(TAG, "onCreate: "+cursor.getColumnName(i)+": " + cursor.getString(i));
+                Log.d(TAG, "onCreate: " + cursor.getColumnName(i) + ": " + cursor.getString(i));
                 Log.d(TAG, "onCreate: ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             }
 
